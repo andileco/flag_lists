@@ -1,0 +1,8 @@
+name: 'Flag lists'
+type: module
+description: 'Allows users to create personal flag lists.'
+core: 8.x
+package: Flags
+dependencies:
+  - flag:flag
+  - token:token
