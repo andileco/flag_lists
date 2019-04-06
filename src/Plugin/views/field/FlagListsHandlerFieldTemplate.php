@@ -9,13 +9,14 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**
- * Field handler to provide simple renderer that allows linking to a list.
+ * Field handler to provide simple renderer that allows linking to a list's
+ * template flag.
  *
  * @ingroup views_field_handlers
  *
- * @ViewsField("flag_lists_handler_field_list")
+ * @ViewsField("flag_lists_handler_field_template")
  */
-class FlagListsHandlerFieldList extends FieldPluginBase {
+class FlagListsHandlerFieldTemplate extends FieldPluginBase {
 
   /**
    * Constructor to provide additional field to add.
@@ -26,14 +27,7 @@ class FlagListsHandlerFieldList extends FieldPluginBase {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->additional_fields['fid'] = [
-      'table' => 'flag_lists_flags',
-      'field' => 'fid',
-    ];
-    $this->additional_fields['uid'] = [
-      'table' => 'flag_lists_flags',
-      'field' => 'uid',
-    ];
+    $this->additional_fields['name'] = ['table' => 'flag', 'field' => 'name'];
   }
 
   /**
@@ -41,7 +35,7 @@ class FlagListsHandlerFieldList extends FieldPluginBase {
    */
   public function defineOptions() {
     $options = parent::defineOptions();
-    $options['link_to_list'] = ['default' => FALSE];
+    $options['link_to_template'] = ['default' => FALSE];
     return $options;
   }
 
@@ -53,11 +47,11 @@ class FlagListsHandlerFieldList extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $form['link_to_list'] = [
-      '#title' => $this->t('Link this field to its list'),
+    $form['link_to_template'] = [
+      '#title' => $this->t('Link this field to its list template'),
       '#description' => $this->t('This will override any other link you have set.'),
       '#type' => 'checkbox',
-      '#default_value' => !empty($this->options['link_to_list']),
+      '#default_value' => !empty($this->options['link_to_template']),
     ];
   }
 
@@ -72,9 +66,9 @@ class FlagListsHandlerFieldList extends FieldPluginBase {
    * @return
    */
   public function renderLink($data, $values) {
-    if (!empty($this->options['link_to_list']) && $data !== NULL && $data !== '') {
+    if (!empty($this->options['link_to_template']) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = "user/" . $values->{$this->aliases['uid']} . "/flag/lists/" . $values->{$this->aliases['fid']};
+      $this->options['alter']['path'] = "admin/structure/flags/manage/" . $values->{$this->aliases['name']};
     }
     return $data;
   }

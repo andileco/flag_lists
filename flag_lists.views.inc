@@ -9,41 +9,41 @@
  * Implementation of hook_views_handlers().
  */
 function flag_lists_views_handlers() {
-  return array(
-    'info' => array(
+  return [
+    'info' => [
       'path' => drupal_get_path('module', 'flag_lists') . '/includes',
-    ),
-    'handlers' => array(
-      'flag_lists_handler_field_list' => array(
+    ],
+    'handlers' => [
+      'flag_lists_handler_field_list' => [
         'parent' => 'views_handler_field',
         'file' => 'flag_lists_handler_field_list.inc',
-      ),
-      'flag_lists_handler_field_template' => array(
+      ],
+      'flag_lists_handler_field_template' => [
         'parent' => 'views_handler_field',
         'file' => 'flag_lists_handler_field_template.inc',
-      ),
-      'flag_lists_handler_field_list_edit' => array(
+      ],
+      'flag_lists_handler_field_list_edit' => [
         'parent' => 'views_handler_field',
         'file' => 'flag_lists_handler_field_list_edit.inc',
-      ),
-      'flag_lists_handler_field_list_delete' => array(
+      ],
+      'flag_lists_handler_field_list_delete' => [
         'parent' => 'views_handler_field',
         'file' => 'flag_lists_handler_field_list_delete.inc',
-      ),
-      'flag_lists_handler_field_template_types' => array(
+      ],
+      'flag_lists_handler_field_template_types' => [
         'parent' => 'views_handler_field_prerender_list',
         'file' => 'flag_lists_handler_field_template_types.inc',
-      ),
-      'flag_lists_handler_filter_template' => array(
+      ],
+      'flag_lists_handler_filter_template' => [
         'parent' => 'views_handler_filter_in_operator',
         'file' => 'flag_lists_handler_filter_template.inc',
-      ),
-      'flag_lists_handler_argument_fid' => array(
+      ],
+      'flag_lists_handler_argument_fid' => [
         'parent' => 'views_handler_argument_numeric',
         'file' => 'flag_lists_handler_argument_fid.inc',
-    ),
-    ),
-  );
+      ],
+    ],
+  ];
 }
 
 
@@ -53,68 +53,68 @@ function flag_lists_views_handlers() {
 function flag_lists_views_data_alter(&$data) {
 
   // We want access to users table fields.
-  $data['users']['table']['join']['flag_lists_flags'] = array(
+  $data['users']['table']['join']['flag_lists_flags'] = [
     'left_field' => 'uid',
     'field' => 'uid',
-  );
+  ];
 
   // We need fid and name form flags' data, and join.
-  $data['flag'] = array(
-    'table' => array(
+  $data['flag'] = [
+    'table' => [
       'group' => t('Flag'),
-      'join' => array(
-        'flag_lists_flags' => array(
+      'join' => [
+        'flag_lists_flags' => [
           'left_field' => 'pfid',
           'field' => 'fid',
-        ),
-      ),
-    ),
-    'fid' => array(
+        ],
+      ],
+    ],
+    'fid' => [
       'title' => t('Flag fid'),
       'help' => t('Flag id'),
-      'field' => array(
+      'field' => [
         'click sortable' => TRUE,
-      ),
-      'filter' => array(
+      ],
+      'filter' => [
         'handler' => 'views_handler_filter_numeric',
         'allow empty' => TRUE,
-      ),
-      'argument' => array(
+      ],
+      'argument' => [
         'handler' => 'views_handler_argument_numeric',
-      ),
-      'sort' => array(
+      ],
+      'sort' => [
         'handler' => 'views_handler_sort',
-      ),
-    ),
-    'name' => array(
+      ],
+    ],
+    'name' => [
       'title' => t('Template name'),
       'help' => t('The name of the list template flag'),
-      'field' => array(
+      'field' => [
         'handler' => 'flag_lists_handler_field_template',
         'click sortable' => TRUE,
-      ),
-      'filter' => array(
+      ],
+      'filter' => [
         'handler' => 'flag_lists_handler_filter_template',
         'allow empty' => TRUE,
-      ),
-      'sort' => array(
+      ],
+      'sort' => [
         'handler' => 'views_handler_sort',
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 
   // Add the checkbox for flagging nodes VBO style, minus batch API
   foreach (entity_get_info() as $entity_type => $info) {
     if (isset($info['base table']) && $info['base table'] == 'node' && isset($data[$info['base table']])) {
-      $data[$info['base table']]['flag_lists_ops'] = array(
+      $data[$info['base table']]['flag_lists_ops'] = [
         'title' => t('Flag lists operations'),
         'help' => t('Provide a checkbox to select the row for flag lists operations.'),
         'real field' => $info['entity keys']['id'],
-        'field' => array(
+        'field' => [
           'handler' => 'flag_lists_handler_field_ops',
           'click sortable' => FALSE,
-        ),
-      );
+        ],
+      ];
       break;
     }
   }
@@ -124,208 +124,208 @@ function flag_lists_views_data_alter(&$data) {
  * Implementation of hook_views_data().
  */
 function flag_lists_views_data() {
-  $data = array();
+  $data = [];
 
   // flag_lists_flags data
-  $data['flag_lists_flags'] = array(
-    'table' => array(
-      'base' => array(
+  $data['flag_lists_flags'] = [
+    'table' => [
+      'base' => [
         'field' => 'fid',
         'title' => t('Flag lists'),
         'help' => 'User created flag lists',
         'weight' => 10,
         'database' => 'default',
-      ),
+      ],
       'group' => t('Flag lists'),
-      'join' => array(
-        'node' => array(
+      'join' => [
+        'node' => [
           'table' => 'flag_lists_flags',
           'left_table' => 'flag_lists_content',
           'left_field' => 'fid',
           'field' => 'fid',
-        ),
-      ),
-    ),
-    'fid' => array(
+        ],
+      ],
+    ],
+    'fid' => [
       'title' => t('fid'),
       'help' => t('Flag list id, required for Flag lists operationis\'s "unflag" action.'),
-      'field' => array(
+      'field' => [
         'handler' => 'flag_lists_handler_field_list',
         'click sortable' => TRUE,
-      ),
-      'filter' => array(
+      ],
+      'filter' => [
         'handler' => 'views_handler_filter_numeric',
         'allow empty' => TRUE,
-      ),
-      'argument' => array(
+      ],
+      'argument' => [
         'handler' => 'flag_lists_handler_argument_fid',
-      ),
-      'sort' => array(
+      ],
+      'sort' => [
         'handler' => 'views_handler_sort',
-      ),
-    ),
-    'pfid' => array(
+      ],
+    ],
+    'pfid' => [
       'title' => t('pfid'),
       'help' => t('Template flag id'),
-      'field' => array(
+      'field' => [
         'handler' => 'flag_lists_handler_field_pfid',
         'click sortable' => TRUE,
-      ),
-      'filter' => array(
+      ],
+      'filter' => [
         'handler' => 'views_handler_filter_numeric',
         'allow empty' => TRUE,
-      ),
-      'argument' => array(
+      ],
+      'argument' => [
         'handler' => 'views_handler_argument_numeric',
-      ),
-      'sort' => array(
+      ],
+      'sort' => [
         'handler' => 'views_handler_sort',
-      ),
-    ),
+      ],
+    ],
 
-    'uid' => array(
+    'uid' => [
       'title' => t('Uid'),
       'help' => t('The list owner\'s uid'), // The help that appears on the UI,
-      'field' => array(
+      'field' => [
         'handler' => 'views_handler_field_user',
         'click sortable' => TRUE,
-      ),
-      'argument' => array(
+      ],
+      'argument' => [
         'handler' => 'views_handler_argument_user_uid',
         'name field' => 'name', // display this field in the summary
-      ),
-      'filter' => array(
+      ],
+      'filter' => [
         'title' => t('Name'),
         'handler' => 'views_handler_filter_user_name',
-      ),
-      'sort' => array(
+      ],
+      'sort' => [
         'handler' => 'views_handler_sort',
-      ),
-    ),
-    'name' => array(
+      ],
+    ],
+    'name' => [
       'title' => t('machine name'),
       'help' => t('Machine name of the list'),
-      'field' => array(
+      'field' => [
         'handler' => 'flag_lists_handler_field_list',
         'click sortable' => TRUE,
-      ),
-      'filter' => array(
+      ],
+      'filter' => [
         'handler' => 'views_handler_filter_string',
         'allow empty' => TRUE,
-      ),
-      'argument' => array(
+      ],
+      'argument' => [
         'handler' => 'views_handler_argument_string',
-      ),
-      'sort' => array(
+      ],
+      'sort' => [
         'handler' => 'views_handler_sort',
-      ),
-    ),
-    'title' => array(
+      ],
+    ],
+    'title' => [
       'title' => t('List title'),
       'help' => t('Title of the list'),
-      'field' => array(
+      'field' => [
         'click sortable' => TRUE,
         'handler' => 'flag_lists_handler_field_list',
-      ),
-      'filter' => array(
+      ],
+      'filter' => [
         'handler' => 'flag_lists_handler_filter_list',
-      ),
-      'argument' => array(
+      ],
+      'argument' => [
         'handler' => 'views_handler_argument_string',
-      ),
-      'sort' => array(
+      ],
+      'sort' => [
         'handler' => 'views_handler_sort',
-      ),
-    ),
-    'edit_list' => array(
-      'field' => array(
+      ],
+    ],
+    'edit_list' => [
+      'field' => [
         'title' => t('Edit link'),
         'help' => t('Link to edit the list title'),
         'handler' => 'flag_lists_handler_field_list_edit',
-      ),
-    ),
-    'delete_list' => array(
-      'field' => array(
+      ],
+    ],
+    'delete_list' => [
+      'field' => [
         'title' => t('Delete link'),
         'help' => t('Link to delete the list'),
         'handler' => 'flag_lists_handler_field_list_delete',
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 
   // Flag_lists_content data
 
-  $data['flag_lists_content'] = array(
-    'table' => array(
-      'join' => array(
-        'node' => array(
+  $data['flag_lists_content'] = [
+    'table' => [
+      'join' => [
+        'node' => [
           'left_field' => 'nid',
           'field' => 'entity_id',
-        ),
-      ),
+        ],
+      ],
       'group' => t('Flag lists'),
-    ),
-    'uid' => array(
-      'relationship' => array(
+    ],
+    'uid' => [
+      'relationship' => [
         'title' => t('User'),
         'help' => t('The user who listed this node'),
         'base' => 'users',
         'handler' => 'views_handler_relationship',
         'label' => t('List user'),
-      ),
-    ),
-    'entity_id' => array(
-      'relationship' => array(
+      ],
+    ],
+    'entity_id' => [
+      'relationship' => [
         'title' => t('Node'),
         'help' => t('The node that has been listed'),
         'base' => 'node',
         'handler' => 'views_handler_relationship',
         'label' => t('Listed content'),
-      ),
-    ),
-    'timestamp' => array(
+      ],
+    ],
+    'timestamp' => [
       'title' => t('Time listed'),
       'help' => t('The time this node was listed'),
-      'field' => array(
-      'handler' => 'views_handler_field_date',
+      'field' => [
+        'handler' => 'views_handler_field_date',
         'click sortable' => TRUE,
-      ),
-      'filter' => array(
+      ],
+      'filter' => [
         'handler' => 'views_handler_filter_numeric',
         'allow empty' => TRUE,
-      ),
-      'argument' => array(
+      ],
+      'argument' => [
         'handler' => 'views_handler_argument_numeric',
-      ),
-      'sort' => array(
+      ],
+      'sort' => [
         'handler' => 'views_handler_sort',
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 
   // Flag_lists_types data
 
-  $data['flag_lists_types'] = array(
-    'table' => array(
+  $data['flag_lists_types'] = [
+    'table' => [
       'group' => t('Flag lists'),
-      'join' => array(
-        'flag_lists_flags' => array(
+      'join' => [
+        'flag_lists_flags' => [
           'table' => 'flag_lists_types',
           'type' => 'INNER',
           'left_table' => 'flag',
           'left_field' => 'name',
           'field' => 'name',
-        ),
-      ),
-    ),
-    'type' => array(
+        ],
+      ],
+    ],
+    'type' => [
       'title' => t('Template types'),
       'help' => t('Node types that can be listed by lists using this template'),
-      'field' => array(
+      'field' => [
         'click sortable' => FALSE,
         'handler' => 'flag_lists_handler_field_template_types',
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
   return $data;
 }

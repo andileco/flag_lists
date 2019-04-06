@@ -18,10 +18,10 @@ function flag_lists_views_default_views() {
   $view->api_version = 2;
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
-  $handler->override_option('fields', array(
-    'title' => array(
+  $handler->override_option('fields', [
+    'title' => [
       'label' => 'List',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -38,7 +38,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -48,10 +48,10 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_flags',
       'field' => 'title',
       'relationship' => 'none',
-    ),
-    'name' => array(
+    ],
+    'name' => [
       'label' => 'Owner',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -68,7 +68,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -80,10 +80,10 @@ function flag_lists_views_default_views() {
       'table' => 'users',
       'field' => 'name',
       'relationship' => 'none',
-    ),
-    'edit_list' => array(
+    ],
+    'edit_list' => [
       'label' => 'Operations',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -100,7 +100,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -110,10 +110,10 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_flags',
       'field' => 'edit_list',
       'relationship' => 'none',
-    ),
-    'delete_list' => array(
+    ],
+    'delete_list' => [
       'label' => 'Delete link',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -130,7 +130,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -140,10 +140,10 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_flags',
       'field' => 'delete_list',
       'relationship' => 'none',
-    ),
-    'name_2' => array(
+    ],
+    'name_2' => [
       'label' => 'Edit template',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -160,7 +160,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 0,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -171,10 +171,10 @@ function flag_lists_views_default_views() {
       'table' => 'flag',
       'field' => 'name',
       'relationship' => 'none',
-    ),
-    'type' => array(
+    ],
+    'type' => [
       'label' => 'Template types',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -191,7 +191,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -202,34 +202,34 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_types',
       'field' => 'type',
       'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('filters', array(
-    'title' => array(
+    ],
+  ]);
+  $handler->override_option('filters', [
+    'title' => [
       'operator' => 'contains',
       'value' => '',
       'group' => '0',
       'exposed' => TRUE,
-      'expose' => array(
+      'expose' => [
         'use_operator' => 0,
         'operator' => 'title_op',
         'identifier' => 'title',
         'label' => 'List title',
         'optional' => 1,
         'remember' => 1,
-      ),
+      ],
       'case' => 0,
       'id' => 'title',
       'table' => 'flag_lists_flags',
       'field' => 'title',
       'relationship' => 'none',
-    ),
-    'uid' => array(
+    ],
+    'uid' => [
       'operator' => 'in',
       'value' => '',
       'group' => '0',
       'exposed' => TRUE,
-      'expose' => array(
+      'expose' => [
         'use_operator' => 0,
         'operator' => 'uid_op',
         'identifier' => 'uid',
@@ -237,18 +237,18 @@ function flag_lists_views_default_views() {
         'optional' => 1,
         'remember' => 1,
         'reduce' => 0,
-      ),
+      ],
       'id' => 'uid',
       'table' => 'flag_lists_flags',
       'field' => 'uid',
       'relationship' => 'none',
-    ),
-    'name' => array(
+    ],
+    'name' => [
       'operator' => 'in',
-      'value' => array(),
+      'value' => [],
       'group' => '0',
       'exposed' => TRUE,
-      'expose' => array(
+      'expose' => [
         'use_operator' => 0,
         'operator' => 'name_op',
         'identifier' => 'name',
@@ -257,57 +257,57 @@ function flag_lists_views_default_views() {
         'single' => 1,
         'remember' => 0,
         'reduce' => 0,
-      ),
+      ],
       'id' => 'name',
       'table' => 'flag',
       'field' => 'name',
       'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('access', array(
+    ],
+  ]);
+  $handler->override_option('access', [
     'type' => 'perm',
     'perm' => 'administer flags',
-  ));
-  $handler->override_option('cache', array(
+  ]);
+  $handler->override_option('cache', [
     'type' => 'none',
-  ));
+  ]);
   $handler->override_option('items_per_page', 25);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
-  $handler->override_option('style_options', array(
+  $handler->override_option('style_options', [
     'grouping' => '',
     'override' => 1,
     'sticky' => 0,
     'order' => 'asc',
-    'columns' => array(
+    'columns' => [
       'title' => 'title',
       'name' => 'name',
       'edit_list' => 'edit_list',
       'delete_list' => 'edit_list',
       'name_2' => 'name_2',
-    ),
-    'info' => array(
-      'title' => array(
+    ],
+    'info' => [
+      'title' => [
         'sortable' => 1,
         'separator' => '',
-      ),
-      'name' => array(
+      ],
+      'name' => [
         'sortable' => 1,
         'separator' => '',
-      ),
-      'edit_list' => array(
+      ],
+      'edit_list' => [
         'separator' => ' ',
-      ),
-      'delete_list' => array(
+      ],
+      'delete_list' => [
         'separator' => '',
-      ),
-      'name_2' => array(
+      ],
+      'name_2' => [
         'sortable' => 0,
         'separator' => '',
-      ),
-    ),
+      ],
+    ],
     'default' => 'title',
-  ));
+  ]);
   $views[$view->name] = $view;
 
   $view = new view;
@@ -320,20 +320,20 @@ function flag_lists_views_default_views() {
   $view->api_version = 2;
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
-  $handler->override_option('relationships', array(
-    'entity_id' => array(
+  $handler->override_option('relationships', [
+    'entity_id' => [
       'label' => 'Listed content',
       'required' => 1,
       'id' => 'entity_id',
       'table' => 'flag_lists_content',
       'field' => 'entity_id',
       'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('fields', array(
-    'title' => array(
+    ],
+  ]);
+  $handler->override_option('fields', [
+    'title' => [
       'label' => 'Node Title',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -350,7 +350,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -360,10 +360,10 @@ function flag_lists_views_default_views() {
       'table' => 'node',
       'field' => 'title',
       'relationship' => 'none',
-    ),
-    'title_1' => array(
+    ],
+    'title_1' => [
       'label' => 'List title',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -380,7 +380,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -390,10 +390,10 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_flags',
       'field' => 'title',
       'relationship' => 'none',
-    ),
-    'name' => array(
+    ],
+    'name' => [
       'label' => 'Name',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -410,7 +410,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -422,10 +422,10 @@ function flag_lists_views_default_views() {
       'table' => 'users',
       'field' => 'name',
       'relationship' => 'uid',
-    ),
-    'timestamp' => array(
+    ],
+    'timestamp' => [
       'label' => 'Time listed',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -442,7 +442,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -453,65 +453,65 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_content',
       'field' => 'timestamp',
       'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('filters', array(
-    'status' => array(
+    ],
+  ]);
+  $handler->override_option('filters', [
+    'status' => [
       'operator' => '=',
       'value' => '1',
       'group' => '0',
       'exposed' => FALSE,
-      'expose' => array(
+      'expose' => [
         'operator' => FALSE,
         'label' => '',
-      ),
+      ],
       'id' => 'status',
       'table' => 'node',
       'field' => 'status',
       'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('access', array(
+    ],
+  ]);
+  $handler->override_option('access', [
     'type' => 'perm',
     'perm' => 'view flag lists',
-  ));
-  $handler->override_option('cache', array(
+  ]);
+  $handler->override_option('cache', [
     'type' => 'none',
-  ));
+  ]);
   $handler->override_option('items_per_page', 25);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
-  $handler->override_option('style_options', array(
+  $handler->override_option('style_options', [
     'grouping' => '',
     'override' => 1,
     'sticky' => 0,
     'order' => 'desc',
-    'columns' => array(
+    'columns' => [
       'title' => 'title',
       'title_1' => 'title_1',
       'name' => 'name',
       'timestamp' => 'timestamp',
-    ),
-    'info' => array(
-      'title' => array(
+    ],
+    'info' => [
+      'title' => [
         'sortable' => 1,
         'separator' => '',
-      ),
-      'title_1' => array(
+      ],
+      'title_1' => [
         'sortable' => 1,
         'separator' => '',
-      ),
-      'name' => array(
+      ],
+      'name' => [
         'sortable' => 1,
         'separator' => '',
-      ),
-      'timestamp' => array(
+      ],
+      'timestamp' => [
         'sortable' => 1,
         'separator' => '',
-      ),
-    ),
+      ],
+    ],
     'default' => 'timestamp',
-  ));
+  ]);
   $views[$view->name] = $view;
 
   $view = new view;
@@ -524,10 +524,10 @@ function flag_lists_views_default_views() {
   $view->api_version = 2;
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
-  $handler->override_option('fields', array(
-    'title' => array(
+  $handler->override_option('fields', [
+    'title' => [
       'label' => 'List',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -544,7 +544,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -554,10 +554,10 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_flags',
       'field' => 'title',
       'relationship' => 'none',
-    ),
-    'edit_list' => array(
+    ],
+    'edit_list' => [
       'label' => 'Edit link',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -574,7 +574,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -584,10 +584,10 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_flags',
       'field' => 'edit_list',
       'relationship' => 'none',
-    ),
-    'delete_list' => array(
+    ],
+    'delete_list' => [
       'label' => 'Delete link',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -604,7 +604,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -614,13 +614,13 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_flags',
       'field' => 'delete_list',
       'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('arguments', array(
-    'uid' => array(
+    ],
+  ]);
+  $handler->override_option('arguments', [
+    'uid' => [
       'default_action' => 'not found',
       'style_plugin' => 'default_summary',
-      'style_options' => array(),
+      'style_options' => [],
       'wildcard' => 'all',
       'wildcard_substitution' => 'All',
       'title' => '%1\'s lists',
@@ -635,21 +635,21 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_flags',
       'field' => 'uid',
       'validate_user_argument_type' => 'uid',
-      'validate_user_roles' => array(
+      'validate_user_roles' => [
         '2' => 0,
-      ),
+      ],
       'relationship' => 'none',
       'default_options_div_prefix' => '',
       'default_argument_fixed' => '',
       'default_argument_user' => 0,
       'default_argument_php' => '',
-      'validate_argument_node_type' => array(
+      'validate_argument_node_type' => [
         'page' => 0,
         'story' => 0,
-      ),
+      ],
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
-      'validate_argument_vocabulary' => array(),
+      'validate_argument_vocabulary' => [],
       'validate_argument_type' => 'tid',
       'validate_argument_transform' => 0,
       'validate_user_restrict_roles' => 0,
@@ -660,39 +660,39 @@ function flag_lists_views_default_views() {
       'validate_argument_user_flag_test' => 'flaggable',
       'validate_argument_user_flag_id_type' => 'id',
       'validate_argument_php' => '',
-    ),
-  ));
-  $handler->override_option('access', array(
+    ],
+  ]);
+  $handler->override_option('access', [
     'type' => 'perm',
     'perm' => 'view flag lists',
-  ));
-  $handler->override_option('cache', array(
+  ]);
+  $handler->override_option('cache', [
     'type' => 'none',
-  ));
+  ]);
   $handler->override_option('items_per_page', 25);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
-  $handler->override_option('style_options', array(
+  $handler->override_option('style_options', [
     'grouping' => '',
     'override' => 1,
     'sticky' => 0,
     'order' => 'asc',
-    'columns' => array(
+    'columns' => [
       'title' => 'title',
       'name' => 'name',
-    ),
-    'info' => array(
-      'title' => array(
+    ],
+    'info' => [
+      'title' => [
         'sortable' => 1,
         'separator' => '',
-      ),
-      'name' => array(
+      ],
+      'name' => [
         'sortable' => 1,
         'separator' => '',
-      ),
-    ),
+      ],
+    ],
     'default' => 'title',
-  ));
+  ]);
   $views[$view->name] = $view;
 
   $view = new view;
@@ -705,10 +705,10 @@ function flag_lists_views_default_views() {
   $view->api_version = 2;
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
-  $handler->override_option('fields', array(
-    'title' => array(
+  $handler->override_option('fields', [
+    'title' => [
       'label' => '',
-      'alter' => array(
+      'alter' => [
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
@@ -725,7 +725,7 @@ function flag_lists_views_default_views() {
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
-      ),
+      ],
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
@@ -735,22 +735,22 @@ function flag_lists_views_default_views() {
       'table' => 'node',
       'field' => 'title',
       'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('sorts', array(
-    'timestamp' => array(
+    ],
+  ]);
+  $handler->override_option('sorts', [
+    'timestamp' => [
       'order' => 'DESC',
       'id' => 'timestamp',
       'table' => 'flag_lists_content',
       'field' => 'timestamp',
       'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('arguments', array(
-    'fid' => array(
+    ],
+  ]);
+  $handler->override_option('arguments', [
+    'fid' => [
       'default_action' => 'not found',
       'style_plugin' => 'default_summary',
-      'style_options' => array(),
+      'style_options' => [],
       'wildcard' => 'all',
       'wildcard_substitution' => 'All',
       'title' => '%1',
@@ -765,18 +765,18 @@ function flag_lists_views_default_views() {
       'table' => 'flag_lists_flags',
       'field' => 'fid',
       'validate_user_argument_type' => 'uid',
-      'validate_user_roles' => array(
+      'validate_user_roles' => [
         '2' => 0,
         '3' => 0,
         '4' => 0,
-      ),
+      ],
       'relationship' => 'none',
       'default_options_div_prefix' => '',
       'default_argument_fixed' => '',
       'default_argument_user' => 0,
       'default_argument_image_size' => '_original',
       'default_argument_php' => '',
-      'validate_argument_node_type' => array(
+      'validate_argument_node_type' => [
         'image' => 0,
         'club' => 0,
         'club_topic' => 0,
@@ -784,13 +784,13 @@ function flag_lists_views_default_views() {
         'profile' => 0,
         'story' => 0,
         'vehicle' => 0,
-      ),
+      ],
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
-      'validate_argument_vocabulary' => array(
+      'validate_argument_vocabulary' => [
         '1' => 0,
         '3' => 0,
-      ),
+      ],
       'validate_argument_type' => 'tid',
       'validate_argument_transform' => 0,
       'validate_user_restrict_roles' => 0,
@@ -800,7 +800,7 @@ function flag_lists_views_default_views() {
       'validate_argument_user_flag_name' => '*relationship*',
       'validate_argument_user_flag_test' => 'flaggable',
       'validate_argument_user_flag_id_type' => 'id',
-      'image_size' => array(
+      'image_size' => [
         '_original' => '_original',
         'thumbnail' => 'thumbnail',
         'preview' => 'preview',
@@ -809,55 +809,55 @@ function flag_lists_views_default_views() {
         'block_icon' => 'block_icon',
         'club_grid' => 'club_grid',
         'full' => 'full',
-      ),
+      ],
       'validate_argument_is_member' => 'OG_VIEWS_DO_NOT_VALIDATE_MEMBERSHIP',
-      'validate_argument_group_node_type' => array(
+      'validate_argument_group_node_type' => [
         'club' => 0,
-      ),
+      ],
       'validate_argument_php' => '',
-      'override' => array(
+      'override' => [
         'button' => 'Override',
-      ),
-    ),
-  ));
-  $handler->override_option('filters', array(
-    'status' => array(
+      ],
+    ],
+  ]);
+  $handler->override_option('filters', [
+    'status' => [
       'operator' => '=',
       'value' => '1',
       'group' => '0',
       'exposed' => FALSE,
-      'expose' => array(
+      'expose' => [
         'operator' => FALSE,
         'label' => '',
-      ),
+      ],
       'id' => 'status',
       'table' => 'node',
       'field' => 'status',
       'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('access', array(
+    ],
+  ]);
+  $handler->override_option('access', [
     'type' => 'none',
-  ));
-  $handler->override_option('cache', array(
+  ]);
+  $handler->override_option('cache', [
     'type' => 'none',
-  ));
+  ]);
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->override_option('path', 'flag/lists/%');
-  $handler->override_option('menu', array(
+  $handler->override_option('menu', [
     'type' => 'none',
     'title' => '',
     'description' => '',
     'weight' => 0,
     'name' => 'navigation',
-  ));
-  $handler->override_option('tab_options', array(
+  ]);
+  $handler->override_option('tab_options', [
     'type' => 'none',
     'title' => '',
     'description' => '',
     'weight' => 0,
     'name' => 'navigation',
-  ));
+  ]);
 
   $views[$view->name] = $view;
   return $views;

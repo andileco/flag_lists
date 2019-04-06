@@ -15,9 +15,9 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @ViewsField("flag_lists_handler_field_list_delete")
+ * @ViewsField("flag_lists_handler_field_list_edit")
  */
-class FlagListsHandlerFieldListDelete extends FieldPluginBase {
+class FlagListsHandlerFieldListEdit extends FieldPluginBase {
 
   /**
    * Constructor to provide additional field to add.
@@ -66,13 +66,14 @@ class FlagListsHandlerFieldListDelete extends FieldPluginBase {
   public function render(ResultRow $values) {
     $fid = $values->{$this->aliases['fid']};
 
-    // Check delete access.
-    if (!flag_lists_is_owner('delete', $fid)) {
+    // Check edit access.
+    if (!flag_lists_is_owner('edit', $fid)) {
       return;
     }
 
-    $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
-    $url = Url::fromRoute('flag_lists.delete', $fid);
+    $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
+
+    $url = Url::fromRoute('flag_lists.edit', $fid);
 
     return Link::fromTextAndUrl($text, $url);
   }

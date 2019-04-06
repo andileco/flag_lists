@@ -5,169 +5,170 @@
  * The Flag lists module install file.
  */
 
- /**
+/**
  * Implementation of hook_install().
  */
 function flag_lists_schema() {
-  $schema = array();
-  $schema['flag_lists_flags'] = array(
-    'fields' => array(
-      'fid' => array(
+  $schema = [];
+  $schema['flag_lists_flags'] = [
+    'fields' => [
+      'fid' => [
         'type' => 'serial',
         'size' => 'small',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'pfid' => array(
+      ],
+      'pfid' => [
         'type' => 'int',
         'size' => 'small',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'uid' => array(
+      ],
+      'uid' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'entity_type' => array(
+      ],
+      'entity_type' => [
         'type' => 'varchar',
         'length' => '32',
         'not null' => TRUE,
         'default' => '',
-      ),
-      'name' => array(
+      ],
+      'name' => [
         'type' => 'varchar',
         'length' => '32',
         'not null' => FALSE,
         'default' => '',
-      ),
-      'title' => array(
+      ],
+      'title' => [
         'type' => 'varchar',
         'length' => '255',
         'not null' => FALSE,
         'default' => '',
-      ),
-      'options' => array(
+      ],
+      'options' => [
         'type' => 'text',
         'not null' => FALSE,
-      ),
-    ),
-    'primary key' => array('fid'),
-    'unique keys' => array(
-      'name' => array('name'),
-    ),
-  );
-  $schema['flag_lists_content'] = array(
-    'fields' => array(
-      'fcid' => array(
+      ],
+    ],
+    'primary key' => ['fid'],
+    'unique keys' => [
+      'name' => ['name'],
+    ],
+  ];
+  $schema['flag_lists_content'] = [
+    'fields' => [
+      'fcid' => [
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'fid' => array(
+      ],
+      'fid' => [
         'type' => 'int',
         'size' => 'small',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'entity_type' => array(
+      ],
+      'entity_type' => [
         'type' => 'varchar',
         'length' => '32',
         'not null' => TRUE,
         'default' => '',
-      ),
-      'entity_id' => array(
+      ],
+      'entity_id' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'uid' => array(
+      ],
+      'uid' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'sid' => array(
+      ],
+      'sid' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'timestamp' => array(
+      ],
+      'timestamp' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'disp-size' => 11,
-      )
-    ),
-    'primary key' => array('fcid'),
-    'unique keys' => array(
-      'fid_content_id_uid_sid' => array('fid', 'entity_id', 'uid', 'sid'),
-    ),
-    'indexes' => array(
-      'entity_type_entity_id' => array('entity_type', 'entity_id'),
-      'entity_type_uid_sid' => array('entity_type', 'uid', 'sid'),
-    ),
-  );
-  $schema['flag_lists_counts'] = array(
-    'fields' => array(
-      'fid' => array(
+      ],
+    ],
+    'primary key' => ['fcid'],
+    'unique keys' => [
+      'fid_content_id_uid_sid' => ['fid', 'entity_id', 'uid', 'sid'],
+    ],
+    'indexes' => [
+      'entity_type_entity_id' => ['entity_type', 'entity_id'],
+      'entity_type_uid_sid' => ['entity_type', 'uid', 'sid'],
+    ],
+  ];
+  $schema['flag_lists_counts'] = [
+    'fields' => [
+      'fid' => [
         'type' => 'int',
         'size' => 'small',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'entity_type' => array(
+      ],
+      'entity_type' => [
         'type' => 'varchar',
         'length' => '32',
         'not null' => TRUE,
         'default' => '',
-      ),
-      'entity_id' => array(
+      ],
+      'entity_id' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'disp-width' => '10',
-      ),
-      'count' => array(
+      ],
+      'count' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'disp-width' => '10',
-      )
-    ),
-    'primary key' => array('fid', 'entity_id'),
-    'indexes' => array(
-      'fid_entity_type' => array('fid', 'entity_type'),
-      'entity_type_entity_id' => array('entity_type', 'entity_id'),
-      'count' => array('count'),
-    ),
-  );
-  $schema['flag_lists_types'] = array(
-    'fields' => array(
-      'name' => array(
+      ],
+    ],
+    'primary key' => ['fid', 'entity_id'],
+    'indexes' => [
+      'fid_entity_type' => ['fid', 'entity_type'],
+      'entity_type_entity_id' => ['entity_type', 'entity_id'],
+      'count' => ['count'],
+    ],
+  ];
+  $schema['flag_lists_types'] = [
+    'fields' => [
+      'name' => [
         'type' => 'varchar',
         'length' => '32',
         'not null' => TRUE,
         'default' => '',
-      ),
-      'type' => array(
+      ],
+      'type' => [
         'type' => 'varchar',
         'length' => '32',
         'not null' => TRUE,
-        'default' => '')
-    ),
-    'primary key' => array('name', 'type'),
-    'indexes' => array(
-      'name' => array('name'),
-    ),
-  );
+        'default' => '',
+      ],
+    ],
+    'primary key' => ['name', 'type'],
+    'indexes' => [
+      'name' => ['name'],
+    ],
+  ];
   return $schema;
 }
 
@@ -177,9 +178,9 @@ function flag_lists_schema() {
 function flag_lists_install() {
   // Set up our default template.
   db_insert('flag_lists_types')
-    ->fields(array(
+    ->fields([
       'name' => 'fl_template',
-    ))
+    ])
     ->execute();
 }
 
@@ -204,22 +205,22 @@ function flag_lists_uninstall() {
   db_delete('variable')->condition('name', 'flag_lists%', 'LIKE')->execute();
 
   $view_to_delete = views_get_view('flag_lists');
-  if (!empty($view_to_delete)) {  
+  if (!empty($view_to_delete)) {
     views_delete_view($view_to_delete);
   }
 
-  $view_to_delete =views_get_view('flag_lists_content');
-  if (!empty($view_to_delete)) {  
+  $view_to_delete = views_get_view('flag_lists_content');
+  if (!empty($view_to_delete)) {
     views_delete_view($view_to_delete);
   }
 
   $view_to_delete = views_get_view('flag_lists_user_lists');
-  if (!empty($view_to_delete)) {  
+  if (!empty($view_to_delete)) {
     views_delete_view($view_to_delete);
   }
 
   $view_to_delete = views_get_view('flag_lists_user_list');
-  if (!empty($view_to_delete)) {  
+  if (!empty($view_to_delete)) {
     views_delete_view($view_to_delete);
   }
 
@@ -247,9 +248,9 @@ function flag_lists_update_7000() {
       drupal_set_message("Deleting flag_id: $orphan->fid flag_content_id: $orphan->fcid");
 
       db_update('flag_lists_counts')
-        ->fields(array(
+        ->fields([
           'count' => ($orphan->count <= 1) ? 0 : $orphan->count - 1,
-        ))
+        ])
         ->condition('content_type', $orphan->content_type)
         ->condition('fid', $orphan->fid)
         ->condition('content_id', $orphan->content_id)
@@ -263,48 +264,48 @@ function flag_lists_update_7000() {
  * Update the flag_lists_flags table
  */
 function flag_lists_update_7301() {
-  db_change_field('flag_lists_flags','content_type', 'entity_type',
-    array(
+  db_change_field('flag_lists_flags', 'content_type', 'entity_type',
+    [
       'type' => 'varchar',
       'length' => '32',
       'not null' => TRUE,
       'default' => '',
-    ));
+    ]);
 }
 
 /**
  * Update the flag_lists_content table
  */
 function flag_lists_update_7302() {
-  db_drop_unique_key('flag_lists_content','fid_content_id_uid_sid');
-  db_drop_index('flag_lists_content','content_type_content_id');
-  db_drop_index('flag_lists_content','content_type_uid_sid');
- 
-  db_change_field('flag_lists_content','content_type', 'entity_type',
-    array(
+  db_drop_unique_key('flag_lists_content', 'fid_content_id_uid_sid');
+  db_drop_index('flag_lists_content', 'content_type_content_id');
+  db_drop_index('flag_lists_content', 'content_type_uid_sid');
+
+  db_change_field('flag_lists_content', 'content_type', 'entity_type',
+    [
       'type' => 'varchar',
       'length' => '32',
       'not null' => TRUE,
       'default' => '',
-    ));
+    ]);
 
-  db_change_field('flag_lists_content','content_id', 'entity_id',
-    array(
+  db_change_field('flag_lists_content', 'content_id', 'entity_id',
+    [
       'type' => 'int',
       'unsigned' => TRUE,
       'not null' => TRUE,
       'default' => 0,
-    ));
+    ]);
 
   db_add_unique_key('flag_lists_content',
     'fid_entity_id_uid_sid',
-    array('fid', 'entity_id', 'uid', 'sid'));
+    ['fid', 'entity_id', 'uid', 'sid']);
   db_add_index('flag_lists_content',
     'entity_type_uid_sid',
-    array('entity_type', 'uid', 'sid'));
+    ['entity_type', 'uid', 'sid']);
   db_add_index('flag_lists_content',
-    'entity_type_entity_id', 
-    array('entity_type', 'entity_id'));
+    'entity_type_entity_id',
+    ['entity_type', 'entity_id']);
 }
 
 /**
@@ -312,32 +313,32 @@ function flag_lists_update_7302() {
  */
 function flag_lists_update_7303() {
   db_drop_primary_key('flag_lists_counts');
-  db_drop_index('flag_lists_counts','fid_content_type');
-  db_drop_index('flag_lists_counts','content_type_content_id');
+  db_drop_index('flag_lists_counts', 'fid_content_type');
+  db_drop_index('flag_lists_counts', 'content_type_content_id');
 
-  db_change_field('flag_lists_counts','content_type', 'entity_type',
-    array(
+  db_change_field('flag_lists_counts', 'content_type', 'entity_type',
+    [
       'type' => 'varchar',
       'length' => '32',
       'not null' => TRUE,
       'default' => '',
-    ));
-  db_change_field('flag_lists_counts','content_id', 'entity_id',
-    array(
+    ]);
+  db_change_field('flag_lists_counts', 'content_id', 'entity_id',
+    [
       'type' => 'int',
       'unsigned' => TRUE,
       'not null' => TRUE,
       'default' => 0,
       'disp-width' => '10',
-    ),
-    array('primary key' => array('fid', 'entity_id')));
+    ],
+    ['primary key' => ['fid', 'entity_id']]);
 
   db_add_index('flag_lists_counts',
     'fid_entity_type',
-    array('fid', 'entity_type'));
+    ['fid', 'entity_type']);
   db_add_index('flag_lists_counts',
     'entity_type_entity_id',
-    array('entity_type', 'entity_id'));
+    ['entity_type', 'entity_id']);
 }
 
 /**
@@ -378,23 +379,23 @@ function flag_lists_update_7304() {
  * Update the flag_lists_flags table
  */
 function flag_lists_update_7305() {
-  db_change_field('flag_lists_flags','uid', 'uid',
-    array(
+  db_change_field('flag_lists_flags', 'uid', 'uid',
+    [
       'type' => 'int',
       'unsigned' => TRUE,
       'not null' => TRUE,
-    ));
+    ]);
 }
 
 /**
  * Update the flag_lists_types table
  */
 function flag_lists_update_7306() {
-  db_change_field('flag_lists_types','type', 'type',
-    array(
-        'type' => 'varchar',
-        'length' => '32',
-        'not null' => TRUE,
-        'default' => '',
-    ));
+  db_change_field('flag_lists_types', 'type', 'type',
+    [
+      'type' => 'varchar',
+      'length' => '32',
+      'not null' => TRUE,
+      'default' => '',
+    ]);
 }

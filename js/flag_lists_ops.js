@@ -1,30 +1,31 @@
 (function ($) {
   Drupal.behaviors.flagListsOps = {
-    attach: function(context) {
+    attach: function (context) {
       // Hide the go button, as it is not needed for JS enabled browsers.
       $('.flag-lists-ops-go', context).hide();
 
       // Make select all checkbox work
-      $('input.flo-table-select-all', context).each(function(i) {
+      $('input.flo-table-select-all', context).each(function (i) {
         var selectall = $(this);
 
         if (!selectall.hasClass('processed')) {
-          selectall.change(function(e) {
+          selectall.change(function (e) {
             $('input.flo-select', $(this).parents('form')).attr('checked', $(this).attr('checked'));
           }).addClass('processed');
         }
       });
 
       // Animate the deletion for AJAX deleting.
-      $('.flo-deleted-value', context).each(function(i) {
+      $('.flo-deleted-value', context).each(function (i) {
         var parent = $(this).parents('.view');
-        $('.flo-select[value='+$(this).val()+']', parent).each(function(i) {
+        $('.flo-select[value=' + $(this).val() + ']', parent).each(function (i) {
           $(this).parents('.views-row, tr').fadeOut().delay(300).remove();
         });
       });
 
-      // Add new options to bottom of list ops dropdown to create new lists on the spot
-      $('.flag-lists-ops-dropdown', context).each(function(i) {
+      // Add new options to bottom of list ops dropdown to create new lists on
+      // the spot
+      $('.flag-lists-ops-dropdown', context).each(function (i) {
         var select = $(this);
         if (!select.hasClass('new-list-processed')) {
           select.addClass('new-list-processed');
@@ -37,45 +38,45 @@
               width: 350,
               modal: true,
               buttons: {
-                "Create": function() {
+                "Create": function () {
                   var name = $('input.name', $(this)).val();
                   var type = $('select.type', $(this)).val();
                   name = encodeURIComponent(name);
 
-                  $.getJSON(Drupal.settings.flag_lists.json_path.replace('%', type)+ '?form_token=' + Drupal.settings.flag_lists.form_token +'&name='+name, function(data) {
+                  $.getJSON(Drupal.settings.flag_lists.json_path.replace('%', type) + '?form_token=' + Drupal.settings.flag_lists.form_token + '&name=' + name, function (data) {
                     if (data.error) {
                       alert(data.error);
                     }
                     else {
-                      select.append('<option value="'+data.flag.fid+'">'+data.flag.title+'</option>');
+                      select.append('<option value="' + data.flag.fid + '">' + data.flag.title + '</option>');
                       $('input.name', $(this)).val('');
                       location.reload(true);
                       dialog.dialog('close');
                     }
                   });
                 },
-                Cancel: function() {
+                Cancel: function () {
                   dialog.dialog('close');
                 }
               },
-              close: function() {
+              close: function () {
 
               }
             });
             $('.create-a-new-list', $(this).parent())
-              .button()
-              .click(function(e) {
-                dialog.dialog('open');
-              });
+                .button()
+                .click(function (e) {
+                  dialog.dialog('open');
+                });
           }
 
           // Put entries into the optgroup
           for (j in Drupal.settings.flag_lists.types) {
             var type = Drupal.settings.flag_lists.types[j];
-            $('.new-list-form form select.type').append('<option value="'+type+'" class="'+type+'">' + Drupal.settings.flag_lists.listname + ' for '+type+'</option>');
+            $('.new-list-form form select.type').append('<option value="' + type + '" class="' + type + '">' + Drupal.settings.flag_lists.listname + ' for ' + type + '</option>');
           }
         }
-        if ( Drupal.settings.flag_lists.types.length <= 1) {
+        if (Drupal.settings.flag_lists.types.length <= 1) {
           $('.new-list-form form select.type', context).hide();
         }
       });

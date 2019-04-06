@@ -1,7 +1,27 @@
 flag_lists.delete:
   path: '/flag/lists/delete/{fid}'
   defaults:
-#    _form: Drupal\flag_lists\Form\DOWENEEDAFORM?
     _title: 'Delete flag list'
+  requirements:
+    _permission: 'administer site configuration'
+
+flag_lists.edit:
+  path: '/flag/lists/edit/{fid}'
+  defaults:
+    _title: 'Edit flag list'
+  requirements:
+    _permission: 'administer site configuration'
+
+flag_lists.fl_template:
+  path: '/admin/structure/flags/manage/fl_template'
+  defaults:
+    _title: 'Manage flag template'
+  requirements:
+    _permission: 'administer site configuration'
+
+flag_lists.template:
+  path: '/admin/structure/flags/lists/template'
+  defaults:
+    _title: 'Create a flag template'
   requirements:
     _permission: 'administer site configuration'

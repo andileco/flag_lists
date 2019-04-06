@@ -9,7 +9,7 @@
  * Flag administration page. Display a list of existing flags.
  */
 function flag_lists_admin_page() {
-  return theme('flag_lists_admin_page', array('flag' => NULL));
+  return theme('flag_lists_admin_page', ['flag' => NULL]);
 }
 
 /**
@@ -34,40 +34,40 @@ function theme_flag_lists_admin_page($variables) {
 
   // Else build a simplified display.
   else {
-    $header = array(
-      array('data' => t('List'), 'field' => 'name'),
-      array('data' => t('List title'), 'field' => 'title'),
-      array('data' => t('List type')),
-      array('data' => t('Owner'), 'field' => 'uid'),
-      array('data' => t('Node types')),
-      array('data' => t('Operations')),
-    );
+    $header = [
+      ['data' => t('List'), 'field' => 'name'],
+      ['data' => t('List title'), 'field' => 'title'],
+      ['data' => t('List type')],
+      ['data' => t('Owner'), 'field' => 'uid'],
+      ['data' => t('Node types')],
+      ['data' => t('Operations')],
+    ];
     $flags = flag_lists_get_flags(25, $header);
     foreach ($flags as $flag) {
       $ops = theme('flag_lists_ops', $flag);
 
       $name = db_select('users', 'u')
-        ->fields('u', array('name'))
+        ->fields('u', ['name'])
         ->condition('uid', $flag->uid)
         ->execute()
         ->fetchField();
-      $owner = l($name, 'user/' . $flag->uid, array('attributes' => array('title' => t('View user profile.'))));
-      $rows[] = array(
+      $owner = l($name, 'user/' . $flag->uid, ['attributes' => ['title' => t('View user profile.')]]);
+      $rows[] = [
         $flag->name,
         $flag->title,
         $flag->content_type,
         $owner,
         $flag->types ? implode(', ', $flag->types) : '-',
         $ops,
-      );
+      ];
     }
     if (!$flags) {
-      $rows[] = array(
-        array('data' => t('No flags are currently defined.'), 'colspan' => 6),
-      );
+      $rows[] = [
+        ['data' => t('No flags are currently defined.'), 'colspan' => 6],
+      ];
     }
 
-    $output .= theme('table', array('header' => $header, 'rows' => $rows));
+    $output .= theme('table', ['header' => $header, 'rows' => $rows]);
     $output .= theme('pager', NULL, 25, 0);
   }
 
@@ -88,29 +88,29 @@ function flag_lists_add($type = NULL) {
 function flag_lists_add_js($type = NULL) {
 
   $token = $_REQUEST['form_token'];
-  if ( is_null($token) || !drupal_valid_token($token, variable_get('flag_lists_name','list'))) { 
-    drupal_json_output(array('error' => t('Are you using an old link?')));
+  if (is_null($token) || !drupal_valid_token($token, variable_get('flag_lists_name', 'list'))) {
+    drupal_json_output(['error' => t('Are you using an old link?')]);
     exit();
   }
 
   if (is_null($type)) {
-    drupal_json_output(array('error' => t('Type not supplied.')));
+    drupal_json_output(['error' => t('Type not supplied.')]);
     exit();
   }
 
   $name = $_REQUEST['name'];
   if (!isset($name) || empty($name)) {
-    drupal_json_output(array('error' => t('List name not supplied.')));
+    drupal_json_output(['error' => t('List name not supplied.')]);
     exit();
   }
 
   if (drupal_strlen($name) > 255) {
-    drupal_json_output(array('error' => t('List name is too long. Maximum is 255 characters.')));
+    drupal_json_output(['error' => t('List name is too long. Maximum is 255 characters.')]);
     exit();
   }
 
   if (flag_lists_title_exists($name, $type)) {
-    drupal_json_output(array('error' => t('You already have a @name with this name for this type of content.', array('@name' => variable_get('flag_lists_name', 'list')))));
+    drupal_json_output(['error' => t('You already have a @name with this name for this type of content.', ['@name' => variable_get('flag_lists_name', 'list')])]);
     exit();
   }
 
@@ -139,14 +139,14 @@ function flag_lists_add_js($type = NULL) {
   $flag->name = NULL;
   $flag->link_type = 'toggle';
   $flag->title = $name;
-  $flag->types = array($type);
+  $flag->types = [$type];
   $flag->uid = $account->uid;
   flag_lists_set_messages($flag);
 
   // Save it.
   flag_lists_save($flag, $account);
 
-  drupal_json_output(array('error' => '', 'flag' => $flag));
+  drupal_json_output(['error' => '', 'flag' => $flag]);
 }
 
 /**
@@ -164,56 +164,59 @@ function flag_lists_form($form, $form_state, $name = NULL, $type = NULL) {
   // If name is numeric, then we have the fid, so get the name.
   if (is_numeric($name)) {
     $name = db_select('flag_lists_flags', 'f')
-      ->fields('f', array('name'))
+      ->fields('f', ['name'])
       ->condition('fid', $name)
       ->execute()
       ->fetchField();
   }
   // Adding a new list.
   if (!isset($name)) {
-    drupal_set_title(t('Add a new @name', array('@name' => variable_get('flag_lists_name', 'list'))));
-    $form['edit'] = array(
+    drupal_set_title(t('Add a new @name', ['@name' => variable_get('flag_lists_name', 'list')]));
+    $form['edit'] = [
       '#type' => 'hidden',
       '#value' => FALSE,
-    );
+    ];
   }
 
   // Editing an existing list.
   else {
     $flag = flag_lists_get_flag($name);
 
-    $title_string_name = t('@name', array('@name' => variable_get('flag_lists_name', 'list')));
-    $title_string = t('Edit your "@title" @name title', array('@title' => $flag->get_title(), '@name' => $title_string_name));
+    $title_string_name = t('@name', ['@name' => variable_get('flag_lists_name', 'list')]);
+    $title_string = t('Edit your "@title" @name title', [
+      '@title' => $flag->get_title(),
+      '@name' => $title_string_name,
+    ]);
     drupal_set_title();
 
-    $form['edit'] = array(
+    $form['edit'] = [
       '#type' => 'hidden',
       '#value' => TRUE,
-    );
-    $form['name'] = array(
+    ];
+    $form['name'] = [
       '#type' => 'hidden',
       '#value' => $name,
-    );
+    ];
   }
 
-  $form['title'] = array(
+  $form['title'] = [
     '#type' => 'textfield',
     '#title' => t('Title'),
     '#default_value' => empty($flag->title) ? '' : $flag->title,
-    '#description' => t('A short, descriptive title for this @name list. Limit to 255 characters.', array('@name' => variable_get('flag_lists_name', 'list'))),
+    '#description' => t('A short, descriptive title for this @name list. Limit to 255 characters.', ['@name' => variable_get('flag_lists_name', 'list')]),
     '#maxlength' => 255,
     '#required' => TRUE,
     '#access' => empty($flag->locked['title']),
     '#weight' => -2,
-  );
-  $form['type'] = array(
+  ];
+  $form['type'] = [
     '#type' => 'hidden',
     '#value' => $type,
-  );
-  $form['submit'] = array(
+  ];
+  $form['submit'] = [
     '#type' => 'submit',
     '#value' => t('Save'),
-  );
+  ];
   return $form;
 }
 
@@ -223,12 +226,12 @@ function flag_lists_form($form, $form_state, $name = NULL, $type = NULL) {
 function flag_lists_form_validate($form, $form_state) {
   // Ensure 255 charactor or less name.
   if (drupal_strlen($form_state['values']['title']) > 255) {
-    form_set_error('name', t('The @name title may only be 255 characters long.', array('@name' => variable_get('flag_lists_name', 'list'))));
+    form_set_error('name', t('The @name title may only be 255 characters long.', ['@name' => variable_get('flag_lists_name', 'list')]));
   }
   // Ensure the machine name is unique.
   if (!$form_state['values']['edit']) {
     if (flag_lists_title_exists($form_state['values']['title'], $form_state['values']['type'])) {
-      form_set_error('title', t('You already have a @name with this name for this type of content.', array('@name' => variable_get('flag_lists_name', 'list'))));
+      form_set_error('title', t('You already have a @name with this name for this type of content.', ['@name' => variable_get('flag_lists_name', 'list')]));
     }
   }
 }
@@ -272,7 +275,7 @@ function flag_lists_form_submit($form, $form_state, $account = NULL) {
     $flag->name = NULL;
     $flag->link_type = 'toggle';
     $flag->title = $form_state['values']['title'];
-    $flag->types = array($type);
+    $flag->types = [$type];
     $flag->uid = $account->uid;
     flag_lists_set_messages($flag);
     // Save it.
@@ -285,22 +288,22 @@ function flag_lists_form_submit($form, $form_state, $account = NULL) {
  */
 function flag_lists_settings_form($form, $form_state) {
   drupal_set_title(t('Flag lists settings'));
-  $form['text'] = array(
+  $form['text'] = [
     '#title' => t('Using flag lists'),
     '#markup' => t('Flag lists allow users to create their own personal flags.
       No user can add to another user\'s lists. Lists inherit their
       settings from template flags, which exist as flags in the flags\' module.'
     ),
-  );
+  ];
 
-  $form['flag_lists_name'] = array(
+  $form['flag_lists_name'] = [
     '#type' => 'textfield',
     '#title' => t('Substitute "list" with your own terminology'),
-    '#default_value' => t('@name', array('@name' => variable_get('flag_lists_name', 'list'))),
+    '#default_value' => t('@name', ['@name' => variable_get('flag_lists_name', 'list')]),
     '#description' => t('You can choose to use another name for "list", such as "favorites" or "bookmarks". Lowercase and plural names usually work best.'),
     '#required' => TRUE,
-  );
-  $form['rebuild'] = array(
+  ];
+  $form['rebuild'] = [
     '#type' => 'fieldset',
     '#title' => t('Global rebuild'),
     '#description' => t('Changes to list templates and  settings normally apply
@@ -309,10 +312,10 @@ function flag_lists_settings_form($form, $form_state) {
       click the link below. This will change ALL existing flag lists. It cannot
       be undone.'),
     '#tree' => FALSE,
-  );
-  $form['rebuild']['global_rebuild'] = array(
+  ];
+  $form['rebuild']['global_rebuild'] = [
     '#markup' => l(t('Rebuild all flag lists.'), FLAG_ADMIN_PATH . '/flag-lists/rebuild'),
-  );
+  ];
 
   return system_settings_form($form);
 }
@@ -347,10 +350,10 @@ function flag_lists_delete_confirm($form, $form_state, $name) {
     drupal_goto();
   }
 
-  $form['fid'] = array('#type' => 'value', '#value' => $flag->fid);
+  $form['fid'] = ['#type' => 'value', '#value' => $flag->fid];
 
   return confirm_form($form,
-    t('Are you sure you want to delete @title?', array('@title' => $flag->get_title())),
+    t('Are you sure you want to delete @title?', ['@title' => $flag->get_title()]),
     isset($_GET['destination']) ? $_GET['destination'] : '/',
     t('This action cannot be undone.'),
     t('Delete'), t('Cancel')
@@ -368,21 +371,21 @@ function flag_lists_delete_confirm_submit($form, &$form_state) {
  * Form to create a new template.
  */
 function flag_lists_create_template_form($form, $form_state) {
-  drupal_set_title(t('Add a new @name template', array('@name' => variable_get('flag_lists_name', 'list'))));
-  $form['help'] = array(
+  drupal_set_title(t('Add a new @name template', ['@name' => variable_get('flag_lists_name', 'list')]));
+  $form['help'] = [
     '#value' => t('This form creates a new, blank list template. After saving, you will be able to configure further options.'),
-  );
-  $form['name'] = array(
+  ];
+  $form['name'] = [
     '#type' => 'textfield',
     '#title' => t('Template name'),
     '#description' => t('The machine-name for this template. It may be up to 20 characters long and my only contain lowercase letters, underscores, and numbers.'),
     '#maxlength' => 255,
     '#required' => TRUE,
-  );
-  $form['submit'] = array(
+  ];
+  $form['submit'] = [
     '#type' => 'submit',
     '#value' => t('Save'),
-  );
+  ];
   return $form;
 }
 
@@ -412,13 +415,13 @@ function flag_lists_create_template_form_submit($form, &$form_state) {
   $template = flag_lists_flag_default_flags();
   $flag = flag_flag::factory_by_array(array_shift($template));
   $flag->title = t('Flag list template') . ' ' . $form_state['values']['name'];
-  $flag->name =  'fl_template_' . $form_state['values']['name'];
+  $flag->name = 'fl_template_' . $form_state['values']['name'];
   $flag->save();
   // Enter the new template into flag_lists_types.
   db_insert('flag_lists_types')
-    ->fields(array(
+    ->fields([
       'name' => $flag->name,
-    ))
+    ])
     ->execute();
   drupal_set_message(t('You must save the template below otherwise the functionality is not guaranteed!'), 'warning');
   $form_state['redirect'] = FLAG_ADMIN_PATH . '/manage/' . $flag->name;
@@ -432,44 +435,44 @@ function flag_lists_create_template_form_submit($form, &$form_state) {
 // @todo use batch api.
 function flag_lists_generate_lists_form() {
   $templates = flag_lists_get_templates();
-  $options = array();
+  $options = [];
   foreach ($templates as $template) {
     $options[$template->fid] = $template->name . ' (' . implode(', ', $template->types) . ')';
   }
-  $form['templates'] = array(
+  $form['templates'] = [
     '#type' => 'checkboxes',
     '#title' => t('Generate lists and/or listings for the following templates.'),
     '#options' => $options,
-  );
+  ];
 
-  $form['lists'] = array(
+  $form['lists'] = [
     '#type' => 'textfield',
     '#title' => t('How many lists should be generated?'),
     '#default_value' => '0',
     '#size' => 7,
     '#maxlength' => 7,
-  );
+  ];
 
-  $form['listings'] = array(
+  $form['listings'] = [
     '#type' => 'textfield',
     '#title' => t('How many listings should be generated?'),
     '#default_value' => '0',
-  );
+  ];
 
-  $form['kill_lists'] = array(
+  $form['kill_lists'] = [
     '#type' => 'checkbox',
     '#title' => t('Delete ALL existing lists and listings before generating new ones? Templates will not be deleted.'),
     '#default_value' => FALSE,
-  );
-  $form['kill_listings'] = array(
+  ];
+  $form['kill_listings'] = [
     '#type' => 'checkbox',
     '#title' => t('Delete ALL existing listings before generating new ones? (Lists are not deleted unless the above is checked.)'),
     '#default_value' => FALSE,
-  );
-  $form['submit'] = array(
+  ];
+  $form['submit'] = [
     '#type' => 'submit',
     '#value' => t('Do it!'),
-  );
+  ];
   return $form;
 }
 
@@ -503,12 +506,14 @@ function flag_lists_generate_lists_form_submit($form, &$form_state) {
     $flags = flag_lists_get_flags();
     foreach ($flags as $flag) {
       $result = db_select('flag_lists_content', 'f')
-        ->fields('f', array('fcid', 'entity_id'))
+        ->fields('f', ['fcid', 'entity_id'])
         ->condition('fid', $flag->fid)
         ->execute();
 
       foreach ($result as $row) {
-        db_delete('flag_lists_content')->condition('fid', $flag->fid)->execute();
+        db_delete('flag_lists_content')
+          ->condition('fid', $flag->fid)
+          ->execute();
         db_delete('flag_lists_counts')->condition('fid', $flag->fid)->execute();
 
         module_invoke_all('flag', 'unflag', $flag, $row->entity_id, $account, $row->fcid);
@@ -540,10 +545,10 @@ function flag_lists_generate_lists_form_submit($form, &$form_state) {
       $account->uid = $uids[array_rand($uids)];
       $edit['values']['title'] = devel_create_greeking(7, TRUE);
       $edit['values']['type'] = $template->types[array_rand($template->types)];
-      $form = array();
+      $form = [];
       flag_lists_form_submit($form, $edit, $account);
     }
-    drupal_set_message(t('@lists created.', array('@lists' => format_plural($form_state['values']['lists'], '1 list', '@count lists'))));
+    drupal_set_message(t('@lists created.', ['@lists' => format_plural($form_state['values']['lists'], '1 list', '@count lists')]));
   }
 
   // Generate listings.
@@ -584,7 +589,7 @@ function flag_lists_generate_lists_form_submit($form, &$form_state) {
 
       $r = rand(1, $max_nid);
       $content_id = db_select('node', 'n')
-        ->fields('n', array('nid'))
+        ->fields('n', ['nid'])
         ->condition('type', $content_type)
         ->condition('nid', $r)
         ->range(0, 1)
@@ -599,7 +604,7 @@ function flag_lists_generate_lists_form_submit($form, &$form_state) {
         $count++;
       }
     }
-    drupal_set_message(t('@listings listed.', array('@listings' => format_plural($count, '1 node', '@count nodes'))));
+    drupal_set_message(t('@listings listed.', ['@listings' => format_plural($count, '1 node', '@count nodes')]));
     if ($count < $form_state['values']['listings']) {
       drupal_set_message(t('Listings are generated randomly. Occassionally a listing will not be created if the random user has no lists or if the node type to be listed has no nodes.'));
     }
@@ -607,12 +612,12 @@ function flag_lists_generate_lists_form_submit($form, &$form_state) {
 }
 
 function flag_lists_autocomplete_list_callback($string = "") {
-  $matches = array();
+  $matches = [];
 
   if ($string) {
     $lists = flag_lists_get_user_flags();
     foreach ($lists as $list) {
-      if (stristr($list->title,$string) !== FALSE) {
+      if (stristr($list->title, $string) !== FALSE) {
         $matches[$list->title] = check_plain($list->title);
       }
     }
