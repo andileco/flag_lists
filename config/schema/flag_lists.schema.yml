@@ -1,0 +1,132 @@
+# I did a lot of guessing here, so please check this closely
+
+flag_lists.flags:
+  fields:
+    fid:
+      type: serial
+      size: small
+      unsigned: TRUE
+      not null: TRUE
+    pfid:
+      type: int
+      size: small
+      unsigned: TRUE
+      not null: TRUE
+    uid:
+      type: int
+      unsigned: TRUE
+      not null: TRUE
+    entity_type:
+      type: varchar
+      length: 32
+      not null: TRUE
+      default: ''
+    name:
+      type: varchar
+      length: 32
+      not null: FALSE
+      default:  ''
+    title:
+      type: varchar
+      length: 255
+      not null: FALSE
+      default: ''
+    options:
+      type: text
+      not null: FALSE
+  primary key: fid
+  unique keys:
+    name: name
+
+flag_lists.content:
+  fields:
+    fcid:
+      type: serial
+      unsigned:  TRUE
+      not null:  TRUE
+    fid:
+      type: int
+      size: small
+      unsigned:  TRUE
+      not null:  TRUE
+      default:  0
+    entity_type:
+      type: varchar
+      length: 32
+      not null:  TRUE
+      default: ''
+    entity_id:
+      type: int
+      unsigned:  TRUE
+      not null:  TRUE
+      default:  0
+    uid:
+      type: int
+      unsigned:  TRUE
+      not null:  TRUE
+      default:  0
+    sid:
+      type: int
+      unsigned:  TRUE
+      not null:  TRUE
+      default:  0
+    timestamp:
+      type: int
+      unsigned:  TRUE
+      not null:  TRUE
+      default:  0
+      disp-size:  11
+
+   primary key: fcid
+   unique keys:
+     fid_content_id_uid_sid: ['fid', 'entity_id', 'uid', 'sid']
+  indexes:
+    entity_type_entity_id: ['entity_type' 'entity_id']
+    entity_type_uid_sid: ['entity_type', 'uid', 'sid']
+
+flag_lists.counts:
+  fields:
+    fid:
+      type: int
+      size: small
+      unsigned:  TRUE
+      not null:  TRUE
+      default:  0
+    entity_type:
+      type: varchar
+      length: 32
+      not null:  TRUE
+      default: ''
+    entity_id:
+      type: int
+      unsigned:  TRUE
+      not null:  TRUE
+      default:  0
+      disp-width: 10
+    count:
+      type: int
+      unsigned:  TRUE
+      not null:  TRUE
+      default:  0
+      disp-width: 10
+  primary key: ['fid' 'entity_id']
+  indexes:
+    fid_entity_type: ['fid', 'entity_type']
+    entity_type_entity_id: ['entity_type', 'entity_id']
+  count: count
+
+flag_lists.types:
+  fields:
+    name:
+      type: varchar
+      length: 32
+      not null:  TRUE
+      default: ''
+    type:
+      type: varchar
+      length: 32
+      not null:  TRUE
+      default: ''
+  primary key: ['name', 'type']
+  indexes:
+    name: name
