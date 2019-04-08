@@ -1,5 +1,8 @@
 <?php
 
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Database\Database;
+
 module_load_include('inc', 'flag', 'includes/flag.admin');
 module_load_include('inc', 'flag', 'flag');
 
@@ -14,6 +17,10 @@ module_load_include('inc', 'flag', 'flag');
  * Implementation of hook_menu().
  */
 function flag_lists_menu() {
+
+  // Get the current user
+  $user = \Drupal::currentUser();
+
   $items = [];
   $items[FLAG_ADMIN_PATH . '/lists'] = [
     'title' => 'Lists',
@@ -814,27 +821,30 @@ function flag_lists_block_save($delta = '', $edit = []) {
 function flag_lists_block_view($delta = '') {
   $block = [];
 
+  // Get the current user
+  $user = \Drupal::currentUser();
+
   switch ($delta) {
     case 'flag_lists':
-      if (user_access('create flag lists')) {
+      if ($user->hasPermission('create flag lists')) {
         $block = [
-          'subject' => t('My @name', ['@name' => variable_get('flag_lists_name', 'list')]),
+          'subject' => t('My @name', ['@name' => \Drupal::state()->get('flag_lists_name', 'list')]),
           'content' => theme('flag_lists_list', [
             'node' => NULL,
-            'create' => variable_get('flag_lists_create_lists', 0),
-            'ops' => variable_get('flag_lists_ops', 0),
-            'use_flags' => variable_get('flag_lists_include_flags', 0),
+            'create' => \Drupal::state()->get('flag_lists_create_lists', 0),
+            'ops' => \Drupal::state()->get('flag_lists_ops', 0),
+            'use_flags' => \Drupal::state()->get('flag_lists_include_flags', 0),
           ]),
         ];
       }
       break;
     case 'flag_lists_list':
-      if (user_access('create flag lists')) {
+      if ($user->hasPermission('create flag lists')) {
         global $user;
-        $account = user_load($user->uid);
+        $account = user_load($user->id());
 
         $block = [
-          'subject' => t('My @name', ['@name' => variable_get('flag_lists_name', 'list')]),
+          'subject' => t('My @name', ['@name' => \Drupal::state()->get('flag_lists_name', 'list')]),
           'content' => flag_lists_user_page($account),
         ];
       }
@@ -860,7 +870,7 @@ function flag_lists_set_messages(&$flag) {
   // Get the parent flag. These are cached by the flag module.
   $pflag = flag_get_flag(NULL, $flag->pfid);
   $title = $flag->title;
-  $lists_name = t('@name', ['@name' => variable_get('flag_lists_name', 'list')]);
+  $lists_name = t('@name', ['@name' => \Drupal::state()->get('flag_lists_name', 'list')]);
   $flag->flag_short = $pflag->flag_short;
   $flag->flag_long = $pflag->flag_long;
   $flag->flag_message = $pflag->flag_message;
@@ -875,15 +885,19 @@ function flag_lists_set_messages(&$flag) {
  * Make sure a user can only see his/her own personal flags.
  */
 function flag_lists_flag_access($flag, $entity_id, $action, $account) {
+
+  // Get the database.
+  $database = Database::getConnection();
+
   if (!empty($flag->name) && (strpos($flag->name, 'flag_lists') === 0)) {
     switch ($action) {
       case 'flag':
       case 'unflag':
-        $fid = db_select('flag_lists_flags', 'f')
+        $fid = $database->select('flag_lists_flags', 'f')
           ->fields('f')
-          ->condition('f.uid', $account->uid)
-          ->execute()
-          ->fetchField();
+          ->condition('f.uid', $account->uid);
+         // ->execute()
+        //  ->fetchField();
         if (!empty($fid)) {
           return ['flag_lists' => TRUE];
         }
@@ -900,7 +914,7 @@ function flag_lists_flag_access($flag, $entity_id, $action, $account) {
 // There may be a better way to keep flag lists out of the links, but this
 // works for now. @todo Find a better way to keep flags lists out of links.
 function flag_lists_link_alter(&$links, $node) {
-  if (!variable_get('flag_lists_use_links', 1)) {
+  if (!\Drupal::state()->get('flag_lists_use_links', 1)) {
     foreach ($links as $name => $link) {
       if (stristr($name, 'flag-fl_')) {
         unset($links[$name]);
@@ -921,28 +935,32 @@ function flag_lists_flag_alter(&$flag) {
  * This is not in flag yet.
  */
 function flag_lists_flag_delete($flag) {
+
+  // Get the database.
+  $database = Database::getConnection();
+
   // Template flag is being deleted. Clean up our tables.
   // Collect the sub-flag fids so we can delete counts and content records.
-  $results = db_select('flag_lists_flags', 'f')
+  $results = $database->select('flag_lists_flags', 'f')
     ->fields('f', ['fid', 'name'])
-    ->condition('pfid', $flag->fid)
-    ->execute();
+    ->condition('pfid', $flag->fid);
+   // ->execute();
   foreach ($results as $fid) {
-    db_delete('flag_lists_counts')
+    $database->delete('flag_lists_counts')
       ->condition('fid', $flag->fid)
       ->execute();
-    db_delete('flag_lists_content')
+    $database->delete('flag_lists_content')
       ->condition('fid', $flag->fid)
       ->execute();
   }
 
   // flag_lists_types uses the template flag name, not our own fid.
-  db_delete('flag_lists_types')
+  $database->delete('flag_lists_types')
     ->condition('name', $flag->name)
     ->execute();
 
   // Now delete the sub-flags.
-  $num_deleted = db_delete('flag_lists_flags')
+  $num_deleted = $database->delete('flag_lists_flags')
     ->condition('pfid', $flag->fid)
     ->execute();
   if (!empty($num_deleted)) {
@@ -951,42 +969,39 @@ function flag_lists_flag_delete($flag) {
 }
 
 /**
- * Implementation of hook_views_api().
- */
-function flag_lists_views_api() {
-  return [
-    'api' => 3.0,
-    'path' => drupal_get_path('module', 'flag_lists') . '/includes',
-  ];
-}
-
-/**
  * Helper function to test if a flag is owned by the current user, or current
  * user can administer flags.
  */
 function flag_lists_is_owner($action, $name) {
-  global $user;
-  if (user_access('administer flags')) {
+
+  // Get the current user
+  $user = \Drupal::currentUser();
+
+  // Get the database.
+  $database = Database::getConnection();
+
+  // Check for permission
+  if ($user->hasPermission('administer flags')) {
     return TRUE;
   }
 
   // If we don't have an fid, then we have the flag name.
   if (is_numeric($name)) {
-    $query = db_select('flag_lists_flags', 'f')->condition('fid', $name);
+    $query = $database->select('flag_lists_flags', 'f')->condition('fid', $name);
     $query->addField('f', 'name');
     $name = $query->execute()->fetchField();
   }
 
-  if (!user_access($action . ' own flag lists')) {
+  if (!$user->hasPermission($action . ' own flag lists')) {
     return FALSE;
   }
-  if (db_select('flag_lists_flags', 'f')
+  if ($database->select('flag_lists_flags', 'f')
     ->fields('f')
     ->condition('f.name', $name)
-    ->condition('f.uid', $user->uid)
-    ->countQuery()
-    ->execute()
-    ->fetchField()
+    ->condition('f.uid', $user->id())
+  //  ->countQuery()
+  //  ->execute()
+  //  ->fetchField()
   ) {
     return TRUE;
   }
@@ -1092,15 +1107,18 @@ function theme_flag_lists_list($variables) {
   $ops = $variables['ops'];
   $use_flags = $variables['use_flags'];
 
+  // Get the current user
+  $user = \Drupal::currentUser();
+
   $items = [];
 
   // Make sure we have a node.
-  if (is_object($node) && user_access('create flag lists')) {
+  if (is_object($node) && $user->hasPermission('create flag lists')) {
     $content_type = $node->type;
     $entity_id = $node->nid;
   }
   // Or at least confirm we are on a node page and use has access.
-  elseif (arg(0) == 'node' && is_numeric(arg(1)) && user_access('create flag lists')) {
+  elseif (arg(0) == 'node' && is_numeric(arg(1)) && $user->hasPermission('create flag lists')) {
     $entity_id = arg(1);
     $query = db_select('node')->condition('nid', $entity_id);
     $query->addField('node', 'type');
@@ -1144,7 +1162,7 @@ function theme_flag_lists_list($variables) {
     }
   }
   if ($create && flag_lists_template_exists($content_type)) {
-    $items[] = l(t('Make a new @name', ['@name' => variable_get('flag_lists_name', t('list'))]), 'flag-lists/add/' . $content_type, ['query' => drupal_get_destination()]);
+    $items[] = l(t('Make a new @name', ['@name' => \Drupal::state()->get('flag_lists_name', t('list'))]), 'flag-lists/add/' . $content_type, ['query' => drupal_get_destination()]);
   }
 
   // Return if nothing to display.
@@ -1158,23 +1176,6 @@ function theme_flag_lists_list($variables) {
     'type' => 'ul',
     'attributes' => ['class' => 'flag-lists-links'],
   ]);
-}
-
-
-// Do we still need this, and/or do we need our own cache?
-/**
- * Clear the flag cache.
- *
- * This is a less severe cache clear than provided by flag. All flag lists
- * users must be authorized, so we don't need to flush the page cache. For now,
- * flag lists titles won't be in the menu, so no need to clear that.
- */
-function _flag_lists_clear_cache() {
-  // We're not using _flag_clear_cache because we probably don't need the menu
-  // rebuild and don't need to clear the page cache.
-  if (module_exists('views')) {
-    views_invalidate_cache();
-  }
 }
 
 /**
@@ -1422,7 +1423,7 @@ function flag_lists_fl_delete($flag, $account = NULL) {
   module_invoke_all('flag_lists', $flag, $account);
   _flag_lists_clear_cache();
   drupal_set_message(t('The @name @title has been deleted.', [
-    '@name' => variable_get('flag_lists_name', 'list'),
+    '@name' => \Drupal::state()->get('flag_lists_name', 'list'),
     '@title' => $flag->title,
   ]));
 }
@@ -1770,10 +1771,10 @@ function flag_lists_tokens($type, $tokens, array $data = [], array $options = []
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'title':
-          $replacements[$original] = $sanitize ? check_plain($flag_list->title) : $flag_lists->title;
+          $replacements[$original] = $sanitize ? Html::escape($flag_list->title) : $flag_lists->title;
           break;
         case 'term':
-          $replacements[$original] = $sanitize ? check_plain(variable_get('flag_lists_name', 'list')) : variable_get('flag_lists_name', 'list');
+          $replacements[$original] = $sanitize ? Html::escape(\Drupal::state()->get('flag_lists_name', 'list')) : \Drupal::state()->get('flag_lists_name', 'list');
           break;
       }
     }
@@ -1787,15 +1788,18 @@ function flag_lists_tokens($type, $tokens, array $data = [], array $options = []
  * This seems to be the only place to do this
  */
 function flag_lists_preprocess_flag(&$variables) {
-  if (module_exists('token') && !empty($variables['flag']->module) && $variables['flag']->module == 'flag_lists') {
+
+  $token = Drupal::token();
+
+  if (\Drupal::moduleHandler()->moduleExists('token') && !empty($variables['flag']->module) && $variables['flag']->module == 'flag_lists') {
     if (!empty($variables['link_text'])) {
-      $variables['link_text'] = token_replace($variables['link_text'], ['flag_lists' => $variables['flag']]);
+      $variables['link_text'] = $token->replace($variables['link_text'], ['flag_lists' => $variables['flag']]);
     }
     if (!empty($variables['link_title'])) {
-      $variables['link_title'] = token_replace($variables['link_title'], ['flag_lists' => $variables['flag']]);
+      $variables['link_title'] = $token->replace($variables['link_title'], ['flag_lists' => $variables['flag']]);
     }
     if (!empty($variables['message_text'])) {
-      $variables['message_text'] = token_replace($variables['message_text'], ['flag_lists' => $variables['flag']]);
+      $variables['message_text'] = $token->replace($variables['message_text'], ['flag_lists' => $variables['flag']]);
     }
   }
 }
@@ -1804,9 +1808,9 @@ function flag_lists_preprocess_flag(&$variables) {
  * Implements hook_views_form_substitutions().
  */
 function flag_lists_views_form_substitutions() {
-  // Views check_plains the column label, so Flag lists needs to do the same
+  // Views Html::escapes the column label, so Flag lists needs to do the same
   // in order for the replace operation to succeed.
-  $select_all_placeholder = check_plain('<!--flag-lists-ops-select-all-->');
+  $select_all_placeholder = Html::escape('<!--flag-lists-ops-select-all-->');
   $select_all = [
     '#type' => 'checkbox',
     '#default_value' => FALSE,
