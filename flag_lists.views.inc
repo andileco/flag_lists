@@ -6,48 +6,6 @@
  */
 
 /**
- * Implementation of hook_views_handlers().
- */
-function flag_lists_views_handlers() {
-  return [
-    'info' => [
-      'path' => drupal_get_path('module', 'flag_lists') . '/includes',
-    ],
-    'handlers' => [
-      'flag_lists_handler_field_list' => [
-        'parent' => 'views_handler_field',
-        'file' => 'flag_lists_handler_field_list.inc',
-      ],
-      'flag_lists_handler_field_template' => [
-        'parent' => 'views_handler_field',
-        'file' => 'flag_lists_handler_field_template.inc',
-      ],
-      'flag_lists_handler_field_list_edit' => [
-        'parent' => 'views_handler_field',
-        'file' => 'flag_lists_handler_field_list_edit.inc',
-      ],
-      'flag_lists_handler_field_list_delete' => [
-        'parent' => 'views_handler_field',
-        'file' => 'flag_lists_handler_field_list_delete.inc',
-      ],
-      'flag_lists_handler_field_template_types' => [
-        'parent' => 'views_handler_field_prerender_list',
-        'file' => 'flag_lists_handler_field_template_types.inc',
-      ],
-      'flag_lists_handler_filter_template' => [
-        'parent' => 'views_handler_filter_in_operator',
-        'file' => 'flag_lists_handler_filter_template.inc',
-      ],
-      'flag_lists_handler_argument_fid' => [
-        'parent' => 'views_handler_argument_numeric',
-        'file' => 'flag_lists_handler_argument_fid.inc',
-      ],
-    ],
-  ];
-}
-
-
-/**
  * Implementation of hook_views_data_alter().
  */
 function flag_lists_views_data_alter(&$data) {
@@ -104,7 +62,7 @@ function flag_lists_views_data_alter(&$data) {
   ];
 
   // Add the checkbox for flagging nodes VBO style, minus batch API
-  foreach (entity_get_info() as $entity_type => $info) {
+  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $info) {
     if (isset($info['base table']) && $info['base table'] == 'node' && isset($data[$info['base table']])) {
       $data[$info['base table']]['flag_lists_ops'] = [
         'title' => t('Flag lists operations'),
